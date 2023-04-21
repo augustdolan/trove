@@ -2,12 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
+import CollectionPage from "./collection/[page]";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const test = api.example.getAll.useQuery()
   return (
     <>
       <Head>
@@ -16,7 +15,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-            <p>test</p>
+            <Link href="/collection/1">1</Link>
+            <Link href="/collection/3/2/1">3, 2, 1</Link>
             {/* <AuthShowcase /> */}
       </main>
     </>
