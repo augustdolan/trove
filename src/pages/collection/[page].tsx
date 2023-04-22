@@ -15,7 +15,7 @@ const CollectionPage: NextPage = ({ isUserCollection = false }) => {
   // discogs needs to be interchangeable
  const [isCompareVinyls, setIsCompareVinyls] = useState(true);
  // bug for if this toggles on at page over intersection && I do not reset to page one, which I should.
- const { data: vinyls } = isCompareVinyls ? api.vinyls.getAllVinylsIntersectionPage.useQuery(({ username: 'augienaught', searchedUsername: 'randomForNow', page})) : api.vinyls.getPage.useQuery({ username: 'augienaught', page });
+ const { data: vinyls } = isCompareVinyls ? api.vinyls.getAllVinylsIntersectionPage.useQuery(({ username: 'augienaught', searchedUsername: 'pdimaso', page})) : api.vinyls.getPage.useQuery({ username: 'augienaught', page });
 
   return (
     <>

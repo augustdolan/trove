@@ -5,5 +5,6 @@ export type Vinyl = {
   artists: Artist[],
   thumbnail: string,
   labels: Label[],
-  year: number
+  year: number,
+  id: number,
 }
