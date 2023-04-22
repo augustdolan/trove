@@ -2,15 +2,15 @@ import { env } from "~/env.mjs";
 
 export class DiscogsClient {
   private static baseUrl: string = 'https://api.discogs.com';
-  private static userAgent: string = 'recordtrove/0.1 +http://recordtrove.com';
+  static userAgent: string = 'recordtrove/0.1 +http://recordtrove.com';
 
   constructor () {
   }
 
   async getVinylPage(username: string, page: string) {
     const allRecordsFolderEnum = 0;
-    // incase I want to make this user input later
-    const recordsPerPage = 75;
+    // incase I want to make this user input later, 100 is max
+    const recordsPerPage = 100;
     // need to paginate and collection
     const options = {
       headers: {
