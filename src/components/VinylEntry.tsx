@@ -4,7 +4,7 @@ import Image from 'next/image'
 const VinylEntry = ({ vinyl }: { vinyl: Vinyl }) => {
   return (
     <div className="p-4 rounded-md flex flex-row border-solid border-2 border-gray-200">
-      <Image src={vinyl.thumbnail} alt="vinyl cover" className="mr-4" />
+      <Image src={vinyl.thumbnail} width="150" height="150" alt="vinyl cover" className="mr-4" />
       <div>
         <div className="mb-2">
           <h1 className="text-xl font-bold">{vinyl.title}</h1>

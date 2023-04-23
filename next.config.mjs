@@ -10,6 +10,11 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    remotePatterns: [{
+      hostname: 'i.discogs.com'
+    }],
+  },
   reactStrictMode: true,
 
   /**
