@@ -42,7 +42,7 @@ export type DiscogsRelease = {
   id: number;
 };
 
-export type ReleasesResponse = {
+export type DiscogsResponse = {
   pagination: {
     page: number;
     pages: number;

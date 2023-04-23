@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
+import { type ParsedUrlQuery } from "querystring";
 import { useState } from "react";
 import VinylEntry from "~/components/VinylEntry";
 import { api } from "~/utils/api";
@@ -21,11 +21,7 @@ const CollectionSearch = () => {
     enabled: Boolean(collectorName),
     refetchOnWindowFocus: false,
   };
-  const {
-    data: vinyls,
-    refetch,
-    isFetching,
-  } = isCompareVinyls
+  const { data: vinyls, isFetching } = isCompareVinyls
     ? api.vinyls.getAllVinylsIntersection.useQuery(
         {
           loggedInUsername: username,
@@ -73,13 +69,11 @@ const CollectionSearch = () => {
           <div>
             {isCompareVinyls ? (
               <p>
-                Comparing <span className="capitalize">{collectorName}'s</span>{" "}
-                trove to yours!
+                Comparing <span className="capitalize">{collectorName}'s</span> trove to yours!
               </p>
             ) : (
               <p>
-                sit tight while we grab{" "}
-                <span className="capitalize">{collectorName}'s</span> trove
+                sit tight while we grab <span className="capitalize">{collectorName}'s</span> trove
               </p>
             )}
           </div>

@@ -6,6 +6,10 @@ await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
 const config = {
+  // temp due to mismatch between IDE and next linter
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   reactStrictMode: true,
 
   /**

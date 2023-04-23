@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { z } from "zod";
-import { DiscogsRelease } from '../../../../types/DiscogsRelease';
+import { type DiscogsRelease } from '../../../../types/DiscogsRelease';
 
 import {
   createTRPCRouter,
@@ -8,7 +8,7 @@ import {
   // for login
   protectedProcedure,
 } from "~/server/api/trpc";
-import { Vinyl } from "types/Vinyl";
+import { type Vinyl } from "types/Vinyl";
 
 export const vinylsRouter = createTRPCRouter({
   getPage: publicProcedure
@@ -75,8 +75,8 @@ const transformReleasesToVinyls = (releases: DiscogsRelease[]): Vinyl[] => {
     }
     // so the merge algorithm elsewhere is fast and there is no change in vinyl chronology on the client side
     return vinyls.sort((a, b) => {
-      const nameA = a.title.toLowerCase(); // ignore upper and lowercase
-      const nameB = b.title.toLowerCase(); // ignore upper and lowercase
+      const nameA = a.title.toLowerCase(); 
+      const nameB = b.title.toLowerCase();
       if (nameA < nameB) {
         return -1;
       }
