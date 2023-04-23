@@ -11,6 +11,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
+      // session provider is not used right now
     <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>

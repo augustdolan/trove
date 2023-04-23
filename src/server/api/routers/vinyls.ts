@@ -12,18 +12,18 @@ import { Vinyl } from "types/Vinyl";
 
 export const vinylsRouter = createTRPCRouter({
   getPage: publicProcedure
-  .input(z.object({ username: z.string(), page: z.string()}))
+  .input(z.object({ searchedUsername: z.string(), page: z.string()}))
   .query(async ({ ctx, input }) => {
-    const response = await ctx.discogsClient.getVinylPage(input.username, input.page);
+    const response = await ctx.discogsClient.getVinylPage(input.searchedUsername, input.page);
 
     return transformReleasesToVinyls(response.releases);
   }),
   getAllVinylsIntersectionPage: publicProcedure
-    .input(z.object({ username: z.string(), searchedUsername: z.string(), page: z.string()}))
+    .input(z.object({ loggedInUsername: z.string(), searchedUsername: z.string(), page: z.string()}))
     .query(async ({ ctx, input }) => {
       // run concurrently with bPromise
       console.log('hi');
-      const userReleases = await getAllReleases(ctx, input.username);
+      const userReleases = await getAllReleases(ctx, input.loggedInUsername);
       const searchedUserReleases = await getAllReleases(ctx, input.searchedUsername);
       console.log(searchedUserReleases);
       const userVinyls = transformReleasesToVinyls(userReleases);
