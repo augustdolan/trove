@@ -12,19 +12,18 @@ import { Vinyl } from "types/Vinyl";
 
 export const vinylsRouter = createTRPCRouter({
   getPage: publicProcedure
-  .input(z.object({ searchedUsername: z.string(), page: z.string()}))
+  .input(z.object({ collectorName: z.string(), page: z.string()}))
   .query(async ({ ctx, input }) => {
-    const response = await ctx.discogsClient.getVinylPage(input.searchedUsername, input.page);
+    const response = await ctx.discogsClient.getVinylPage(input.collectorName, input.page);
 
     return transformReleasesToVinyls(response.releases);
   }),
   getAllVinylsIntersectionPage: publicProcedure
-    .input(z.object({ loggedInUsername: z.string(), searchedUsername: z.string(), page: z.string()}))
+    .input(z.object({ loggedInUsername: z.string(), collectorName: z.string(), page: z.string()}))
     .query(async ({ ctx, input }) => {
       // run concurrently with bPromise
-      console.log('hi');
       const userReleases = await getAllReleases(ctx, input.loggedInUsername);
-      const searchedUserReleases = await getAllReleases(ctx, input.searchedUsername);
+      const searchedUserReleases = await getAllReleases(ctx, input.collectorName);
       console.log(searchedUserReleases);
       const userVinyls = transformReleasesToVinyls(userReleases);
       const searchedUserVinyls = transformReleasesToVinyls(searchedUserReleases);
@@ -68,7 +67,17 @@ const transformReleasesToVinyls = (releases: DiscogsRelease[]): Vinyl[] => {
       })
     }
     // so the merge algorithm elsewhere is fast and there is no change in vinyl chronology on the client side
-    return vinyls.sort((a, b) => a.id - b.id);
+    return vinyls.sort((a, b) => {
+      const nameA = a.title.toLowerCase(); // ignore upper and lowercase
+      const nameB = b.title.toLowerCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
   }, []);
   return vinyls;
 }
@@ -83,9 +92,9 @@ const getVinylIntersection = (collectionOne: Vinyl[], collectionTwo: Vinyl[]): V
     const vinylOne = collectionOne[collectionOneIndex]!;
     const vinylTwo = collectionTwo[collectionTwoIndex]!;
 
-    if (vinylOne.id < vinylTwo.id) {
+    if (vinylOne.title.toLowerCase() < vinylTwo.title.toLowerCase()) {
       collectionOneIndex++
-    } else if (vinylOne.id > vinylTwo.id) {
+    } else if (vinylOne.title.toLowerCase() > vinylTwo.title.toLowerCase()) {
       collectionTwoIndex++
     } else {
       sharedVinyls.push(vinylOne);
