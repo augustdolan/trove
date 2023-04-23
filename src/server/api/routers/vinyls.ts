@@ -18,8 +18,15 @@ export const vinylsRouter = createTRPCRouter({
 
     return transformReleasesToVinyls(response.releases);
   }),
-  getAllVinylsIntersectionPage: publicProcedure
-    .input(z.object({ loggedInUsername: z.string(), collectorName: z.string(), page: z.string()}))
+  getAllVinyls: publicProcedure
+  .input(z.object({ collectorName: z.string()}))
+  .query(async ({ ctx, input }) => {
+    
+    const collectorReleases = await getAllReleases(ctx, input.collectorName);
+    return transformReleasesToVinyls(collectorReleases);
+  }),
+  getAllVinylsIntersection: publicProcedure
+    .input(z.object({ loggedInUsername: z.string(), collectorName: z.string()}))
     .query(async ({ ctx, input }) => {
       // run concurrently with bPromise
       const userReleases = await getAllReleases(ctx, input.loggedInUsername);
