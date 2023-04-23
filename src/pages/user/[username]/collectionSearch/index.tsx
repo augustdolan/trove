@@ -9,10 +9,9 @@ import Header from "~/components/Header";
 const CollectionSearch = () => {
   const router = useRouter();
   // type issue with string | string[] so not destructuring
-  const { username, collectorName, page } = router.query as ParsedUrlQuery & {
+  const { username, collectorName } = router.query as ParsedUrlQuery & {
     username: string;
     collectorName: string;
-    page: string;
   };
 
   const [usernameToQuery, setUsernameToQuery] = useState("");
@@ -25,7 +24,7 @@ const CollectionSearch = () => {
   const {
     data: vinyls,
     refetch,
-    isRefetching,
+    isFetching,
   } = isCompareVinyls
     ? api.vinyls.getAllVinylsIntersection.useQuery(
         {
@@ -40,10 +39,10 @@ const CollectionSearch = () => {
     <>
       <Header />
       <div className="p-8">
-        <div className="grid grid-cols-10 mb-16 gap-x-4">
+        <div className="mb-16 grid grid-cols-10 gap-x-4">
           <div className="relative col-span-9">
             <label
-              className="absolute pl-8 text-xs -translate-y-4"
+              className="absolute -translate-y-4 pl-8 text-xs"
               htmlFor="discogs-collection-search"
             >
               Collection Search
@@ -70,32 +69,53 @@ const CollectionSearch = () => {
             Search
           </button>
         </div>
-        <div className="relative mb-10">
-          <h2 className="mb-4 text-center text-6xl font-bold capitalize">
-            {isCompareVinyls
-              ? `${collectorName} + ${username}`
-              : `${collectorName}`}
-          </h2>
-          <p className="text-center text-2xl font-bold">
-            {isCompareVinyls
-              ? `Records in Common: ${vinyls?.length}`
-              : `Total Collection: ${vinyls?.length}`}
-          </p>
-          {/* togle */}
-          <FormControlLabel
-            className="absolute right-0 top-1/2 -translate-y-1/2 transform"
-            onClick={() => {
-              setIsCompareVinyls(!isCompareVinyls);
-            }}
-            control={<Switch />}
-            label="Compare Vinyls"
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-5">
-          {vinyls
-            ? vinyls.map((vinyl) => <VinylEntry vinyl={vinyl} />)
-            : "...Loading"}
-        </div>
+        {isFetching && (
+          <div>
+            {isCompareVinyls ? (
+              <p>
+                Comparing <span className="capitalize">{collectorName}'s</span>{" "}
+                trove to yours!
+              </p>
+            ) : (
+              <p>
+                sit tight while we grab{" "}
+                <span className="capitalize">{collectorName}'s</span> trove
+              </p>
+            )}
+          </div>
+        )}
+        {(isFetching || Boolean(vinyls)) && (
+          <>
+            <div className="relative mb-10">
+              <h2 className="mb-4 text-center text-6xl font-bold capitalize">
+                {isCompareVinyls
+                  ? `${collectorName} + ${username}`
+                  : `${collectorName}`}
+              </h2>
+              <p className="text-center text-2xl font-bold">
+                {isCompareVinyls
+                  ? `Records in Common: ${vinyls?.length}`
+                  : `Total Collection: ${vinyls?.length}`}
+              </p>
+              <FormControlLabel
+                className="absolute right-0 top-1/2 -translate-y-1/2 transform"
+                checked={isCompareVinyls}
+                onClick={() => {
+                  setIsCompareVinyls(!isCompareVinyls);
+                }}
+                control={<Switch />}
+                label="Compare Vinyls"
+              />
+            </div>
+            {Boolean(vinyls) && (
+              <div className="grid grid-cols-3 gap-5">
+                {vinyls!.map((vinyl) => (
+                  <VinylEntry vinyl={vinyl} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </>
   );
