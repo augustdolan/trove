@@ -5,6 +5,7 @@ import VinylEntry from "~/components/VinylEntry";
 import { api } from "~/utils/api";
 import { FormControlLabel, Switch } from "@mui/material";
 import Header from "~/components/Header";
+import { buttonClass, h2Class } from "~/utils/tailwindClasses";
 
 const CollectionSearch = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const CollectionSearch = () => {
 
   return (
     <>
-      <Header />
+      <Header username={username}/>
       <div className="p-8">
         <div className="mb-16 grid grid-cols-10 gap-x-4">
           <div className="relative col-span-9">
@@ -51,7 +52,7 @@ const CollectionSearch = () => {
             />
           </div>
           <button
-            className="rounded-md bg-green-500 p-2"
+            className={buttonClass}
             onClick={() => {
               router.push({
                 pathname: "/user/[username]/collectionSearch",
@@ -81,7 +82,7 @@ const CollectionSearch = () => {
         {(isFetching || Boolean(vinyls)) && (
           <>
             <div className="relative mb-10">
-              <h2 className="mb-4 text-center text-6xl font-bold capitalize">
+              <h2 className={h2Class}>
                 {isCompareVinyls
                   ? `${collectorName} + ${username}`
                   : `${collectorName}`}
