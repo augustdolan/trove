@@ -15,7 +15,7 @@ const Header = ({ username }: { username?: string }) => (
         </g>
       </g>
     </svg>
-    {username && <p className="absolute right-5 top-5">Hey {username}!</p>}
+    {username && <p className="absolute right-5 top-5 capitalize">Hey {username}!</p>}
   </header>
 );
 

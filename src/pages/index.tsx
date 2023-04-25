@@ -16,7 +16,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className=" mt-72 flex flex-col items-center justify-center">
+      <main className="mt-72">
+        <form className="flex flex-col items-center justify-center">
         <label htmlFor="discogs-collection-search" className={h2Class}>
           Fake Discogs Login
         </label>
@@ -29,7 +30,8 @@ const Home: NextPage = () => {
         />
         <button
           className={buttonClass}
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             router.push({
               pathname: "/user/[name]/collectionSearch",
               query: { name: loggedInUsername },
@@ -38,6 +40,7 @@ const Home: NextPage = () => {
         >
           Login
         </button>
+        </form>
       </main>
     </>
   );

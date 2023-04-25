@@ -22,7 +22,8 @@ const CollectionSearch = () => {
     enabled: Boolean(collectorName),
     refetchOnWindowFocus: false,
   };
-  const { data: vinyls, isFetching } = isCompareVinyls
+  
+  const { data, isFetching, error } = isCompareVinyls
     ? api.vinyls.getAllVinylsIntersection.useQuery(
         {
           loggedInUsername: username,
@@ -36,7 +37,7 @@ const CollectionSearch = () => {
     <>
       <Header username={username}/>
       <div className="p-8">
-        <div className="mb-16 grid grid-cols-10 gap-x-4">
+        <form className="mb-16 grid grid-cols-10 gap-x-4">
           <div className="relative col-span-9">
             <label
               className="absolute -translate-y-4 pl-8 text-xs"
@@ -48,12 +49,15 @@ const CollectionSearch = () => {
               className="h-10 w-full rounded-full border-2 border-solid border-green-500 pl-8 pr-4  "
               type="search"
               id="discogs-collection-search"
-              onChange={(event) => setUsernameToQuery(event.target.value)}
+              onChange={(e) => {
+                setUsernameToQuery(e.target.value)
+              }}
             />
           </div>
           <button
             className={buttonClass}
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               router.push({
                 pathname: "/user/[username]/collectionSearch",
                 query: {
@@ -65,7 +69,7 @@ const CollectionSearch = () => {
           >
             Search
           </button>
-        </div>
+        </form>
         {isFetching && (
           <div>
             {isCompareVinyls ? (
@@ -79,7 +83,7 @@ const CollectionSearch = () => {
             )}
           </div>
         )}
-        {(isFetching || Boolean(vinyls)) && (
+        {(isFetching || Boolean(data?.vinyls)) && (
           <>
             <div className="relative mb-10">
               <h2 className={h2Class}>
@@ -89,8 +93,8 @@ const CollectionSearch = () => {
               </h2>
               <p className="text-center text-2xl font-bold">
                 {isCompareVinyls
-                  ? `Records in Common: ${vinyls?.length}`
-                  : `Total Collection: ${vinyls?.length}`}
+                  ? `Records in Common: ${data?.vinyls?.length}`
+                  : `Total Collection: ${data?.vinyls?.length}`}
               </p>
               <FormControlLabel
                 className="absolute right-0 top-1/2 -translate-y-1/2 transform"
@@ -102,9 +106,9 @@ const CollectionSearch = () => {
                 label="Compare Vinyls"
               />
             </div>
-            {Boolean(vinyls) && (
+            {Boolean(data?.vinyls) && (
               <div className="grid grid-cols-3 gap-5">
-                {vinyls!.map((vinyl) => (
+                {data?.vinyls.map((vinyl) => (
                   <VinylEntry vinyl={vinyl} />
                 ))}
               </div>
