@@ -18,12 +18,13 @@ const Home: NextPage = () => {
       <Header />
       <main className=" mt-72 flex flex-col items-center justify-center">
         <label htmlFor="discogs-collection-search" className={h2Class}>
-          Fake Login
+          Fake Discogs Login
         </label>
         <input
           className="h-10 w-half text-center rounded-full border-2 border-solid border-green-500 px-4 mb-4"
           type="search"
           id="discogs-collection-search"
+          placeholder="enter discogs username"
           onChange={(event) => setLoggedInUsername(event.target.value)}
         />
         <button
