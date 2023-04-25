@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import { fstat } from "fs";
 import type { DiscogsRelease, DiscogsResponse } from "types/DiscogsRelease";
@@ -98,11 +99,13 @@ export class DiscogsClient {
       };
     } catch (err: any) {
       console.error("unexpected error", err);
-      return {
-        status: err.status,
-        // need to fix this return
-        releasesWithPaginationData: err.data
-      };
+      const statusEnum = {
+        403: "FORBIDDEN",
+        404: "NOT_FOUND",
+      }
+      throw new TRPCError({
+        code: statusEnum[err.response.status] || "INTERNAL_SERVER_ERROR"
+      })
     }
   }
 

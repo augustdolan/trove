@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import { FormControlLabel, Switch } from "@mui/material";
 import Header from "~/components/Header";
 import { buttonClass, h2Class } from "~/utils/tailwindClasses";
+import SearchResults from "~/components/SearchResults";
 
 const CollectionSearch = () => {
   const router = useRouter();
@@ -14,6 +15,11 @@ const CollectionSearch = () => {
     username: string;
     collectorName: string;
   };
+
+  const errorEnum = {
+    404: <p className="text-center">Sorry, user {collectorName} doesn't exist!</p>,
+    403: <p className="text-center">Sorry, user {collectorName}'s collection is private</p>
+  }
 
   const [usernameToQuery, setUsernameToQuery] = useState("");
   const [isCompareVinyls, setIsCompareVinyls] = useState(false);
@@ -70,51 +76,8 @@ const CollectionSearch = () => {
             Search
           </button>
         </form>
-        {isFetching && (
-          <div>
-            {isCompareVinyls ? (
-              <p>
-                Comparing <span className="capitalize">{collectorName}'s</span> trove to yours!
-              </p>
-            ) : (
-              <p>
-                sit tight while we grab <span className="capitalize">{collectorName}'s</span> trove
-              </p>
-            )}
-          </div>
-        )}
-        {(isFetching || Boolean(data?.vinyls)) && (
-          <>
-            <div className="relative mb-10">
-              <h2 className={h2Class}>
-                {isCompareVinyls
-                  ? `${collectorName} + ${username}`
-                  : `${collectorName}`}
-              </h2>
-              <p className="text-center text-2xl font-bold">
-                {isCompareVinyls
-                  ? `Records in Common: ${data?.vinyls?.length}`
-                  : `Total Collection: ${data?.vinyls?.length}`}
-              </p>
-              <FormControlLabel
-                className="absolute right-0 top-1/2 -translate-y-1/2 transform"
-                checked={isCompareVinyls}
-                onClick={() => {
-                  setIsCompareVinyls(!isCompareVinyls);
-                }}
-                control={<Switch />}
-                label="Compare Vinyls"
-              />
-            </div>
-            {Boolean(data?.vinyls) && (
-              <div className="grid grid-cols-3 gap-5">
-                {data?.vinyls.map((vinyl) => (
-                  <VinylEntry vinyl={vinyl} />
-                ))}
-              </div>
-            )}
-          </>
-        )}
+        {(isFetching || Boolean(data)) && <SearchResults isCompareVinyls={isCompareVinyls} setIsCompareVinyls={setIsCompareVinyls} username={username} collectorName={collectorName} vinyls={data?.vinyls} />}
+        {Boolean(error) && errorEnum[error?.data?.httpStatus]}
       </div>
     </>
   );
