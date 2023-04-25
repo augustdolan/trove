@@ -16,20 +16,6 @@ type DiscogsReleaseAndStatusCode = {
   releasesWithPaginationData: DiscogsResponse,
 }
 
-type VinylsWithPaginationData = {
-  pagination: {
-    page: number;
-    pages: number;
-    per_page: number;
-    items: number;
-    urls: {
-      last: string;
-      next: string;
-    };
-  };
-  vinyls: Vinyl[];
-}
-
 export class DiscogsClient {
   private static baseUrl = "https://api.discogs.com";
   private static userAgent = "recordtrove/0.1 +http://recordtrove.com";
@@ -99,13 +85,17 @@ export class DiscogsClient {
       };
     } catch (err: any) {
       console.error("unexpected error", err);
-      const statusEnum = {
-        403: "FORBIDDEN",
-        404: "NOT_FOUND",
+      if (err.response.status === 403) {
+        throw new TRPCError({
+          code: "FORBIDDEN"
+        })
       }
-      throw new TRPCError({
-        code: statusEnum[err.response.status] || "INTERNAL_SERVER_ERROR"
-      })
+      if (err.response.status === 404) {
+        throw new TRPCError({
+          code: "NOT_FOUND"
+        })
+      }
+      throw err;
     }
   }
 

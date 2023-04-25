@@ -17,8 +17,9 @@ const CollectionSearch = () => {
   };
 
   const errorEnum = {
-    404: <p className="text-center">Sorry, user {collectorName} doesn't exist!</p>,
-    403: <p className="text-center">Sorry, user {collectorName}'s collection is private</p>
+    "404": <p className="text-center">Sorry, user {collectorName} doesn't exist!</p>,
+    "403": <p className="text-center">Sorry, user {collectorName}'s collection is private</p>,
+    "500": <p className="text-center">Sorry, an internal service error occurred</p>,
   }
 
   const [usernameToQuery, setUsernameToQuery] = useState("");
@@ -77,7 +78,7 @@ const CollectionSearch = () => {
           </button>
         </form>
         {(isFetching || Boolean(data)) && <SearchResults isCompareVinyls={isCompareVinyls} setIsCompareVinyls={setIsCompareVinyls} username={username} collectorName={collectorName} vinyls={data?.vinyls} />}
-        {Boolean(error) && errorEnum[error?.data?.httpStatus]}
+        {Boolean(error) && errorEnum[error?.data?.httpStatus.toString() as keyof typeof errorEnum || '500']}
       </div>
     </>
   );
