@@ -1,7 +1,7 @@
 import troveLogo from "../../public/trove.svg";
 
 const Header = ({ username }: { username?: string }) => (
-  <header className="bg-green-500 p-4">
+  <header className="bg-green-500 p-4 fixed w-screen z-10">
     <svg
       className="w-32"
       xmlns="http://www.w3.org/2000/svg"
