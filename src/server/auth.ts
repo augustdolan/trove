@@ -8,6 +8,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import { signIn } from "next-auth/react";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -44,13 +45,37 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    signIn: () => {return true},
   },
   adapter: PrismaAdapter(prisma),
+  debug: true,
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
+    {
+      id: 'discogs',
+      name: 'Discogs',
+      type: 'oauth',
+      version: '1.0A',
+      authorization: 'https://discogs.com/oauth/authorize',
+      accessTokenUrl: 'https://api.discogs.com/oauth/access_token',
+      requestTokenUrl: 'https://api.discogs.com/oauth/request_token',
+      profileUrl: 'https://api.discogs.com/oauth/identity',
+      encoding: 'PLAINTEXT',
+      async profile(profile) {
+        console.log('hi there', profile)
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        }
+      },
+      clientId: env.DISCOGS_KEY, // not sure this is correct
+      clientSecret: env.DISCOGS_SECRET,
+    }
     /**
      * ...add more providers here.
      *
@@ -61,6 +86,7 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  secret: 'abcdefg'
 };
 
 /**

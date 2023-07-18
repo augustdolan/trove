@@ -1,10 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-// import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import router from "next/router";
 import { buttonClass, h2Class } from "~/utils/tailwindClasses";
 import Header from "~/components/Header";
+import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const [loggedInUsername, setLoggedInUsername] = useState("");
@@ -46,9 +47,34 @@ const Home: NextPage = () => {
             </button>
           </form>
         </div>
+        <AuthShowcase />
       </main>
     </>
   );
 };
+
+function AuthShowcase() {
+  const { data: sessionData } = useSession();
+
+  const { data: secretMessage } = api.vinyls.getSecretMessage.useQuery(
+    undefined, // no input
+    { enabled: sessionData?.user !== undefined }
+  );
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-4">
+      <p className="text-center text-2xl">
+        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {secretMessage && <span> - {secretMessage}</span>}
+      </p>
+      <button
+        className="rounded-full px-10 py-3 font-semibold transition"
+        onClick={sessionData ? () => void signOut() : () => void signIn()}
+      >
+        {sessionData ? "Sign out" : "Sign in"}
+      </button>
+    </div>
+  );
+}
 
 export default Home;

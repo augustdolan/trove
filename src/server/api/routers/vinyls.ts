@@ -10,6 +10,9 @@ import {
 import { type Vinyl } from "types/Vinyl";
 
 export const vinylsRouter = createTRPCRouter({
+  getSecretMessage: protectedProcedure.query(() => {
+    return "you can now see this secret message!";
+  }),
   getAllVinyls: publicProcedure
     .input(z.object({ collectorName: z.string() }))
     .query(async ({ ctx, input }) => {
