@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const SideNav = ({ isFromHamburger }: { isFromHamburger: boolean }) => {
+const SideNav = ({ isFromHamburger = false }: { isFromHamburger?: boolean }) => {
   const router = useRouter();
   const cssClassNamesForMobile = 'bg-white w-screen z-10'
   const cssClassNamesForWeb = 'w-1/6 border-r-2'
